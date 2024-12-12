@@ -4,15 +4,32 @@ import moment from "moment";
 import { ArrowLeft } from "lucide-react"; // Lucide icon for prev button
 import { useNavigate } from "react-router";
 import { Button } from "@/components/ui/button";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+
+const schema = yup.object({
+  orderNumber: yup.number().required("Order number is required"),
+  quantity: yup.number().positive().integer().required("Quantity is required"),
+  workerRate: yup.number().positive().integer().required("Worker rate is required"),
+  deliveryDate: yup.date().required("Delivery date is required"),
+  productName: yup.string().required("Product name is required"),
+  masterName: yup.string(),
+  workerName: yup.string(),
+  customerName: yup.string().required("Customer name is required"),
+  address: yup.string().required("Address is required"),
+}).required();
 
 function AddNewWork() {
   const navigate = useNavigate();
+
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm();
+  } = useForm({
+    resolver: yupResolver(schema),
+  });
 
   // Dynamic Data for Dropdowns
   const products = [
@@ -25,19 +42,25 @@ function AddNewWork() {
     { id: 2, name: "Worker B" },
     { id: 3, name: "Worker C" },
   ];
- 
+
   const masters = [
     { id: 1, name: "Master Ali" },
     { id: 2, name: "Master Karim" },
     { id: 3, name: "Master Rahim" },
   ];
-  const quantities = [1, 2, 3, 5,6,7,8,9, 10]; // Example quantity options
+  const quantities = [1, 2, 3, 5, 6, 7, 8, 9, 10]; // Example quantity options
 
   const onSubmit = (data) => {
     // Format the date using Moment.js
-    const formattedDate = moment(data.deliveryDate).format("MMMM Do, YYYY");
+    const formattedDate = moment(data.deliveryDate, "YYYY-MM-DD").format(
+      "MMMM Do, YYYY"
+    );
 
-    console.log("Formatted Data:", { ...data, deliveryDate: formattedDate, timestamp: data.timestamp });
+    console.log("Formatted Data:", {
+      ...data,
+      deliveryDate: formattedDate,
+      timestamp: data.timestamp,
+    });
 
     // SweetAlert2 Success Message
     Swal.fire({
@@ -49,7 +72,7 @@ function AddNewWork() {
 
     // Reset the form after submission
     reset();
-    navigate(-1)
+    navigate(-1);
   };
 
   return (
@@ -57,14 +80,16 @@ function AddNewWork() {
       <div className="w-full max-w-3xl bg-gradient-to-br from-gray-800 to-gray-900 text-white shadow-2xl rounded-xl p-10">
         <div className="flex justify-between items-center mb-8">
           {/* Prev Button */}
-          <Button 
-        onClick={() => navigate(-1)} 
-        className="flex items-center text-white text-lg hover:text-indigo-400"
-      >
-        <ArrowLeft size={24} className="mr-2" />
-        <span>Go Back</span>
-      </Button>
-          <h2 className="text-4xl font-extrabold text-indigo-400">Add New Work</h2>
+          <Button
+            onClick={() => navigate(-1)}
+            className="flex items-center text-white text-lg hover:text-indigo-400"
+          >
+            <ArrowLeft size={24} className="mr-2" />
+            <span>Go Back</span>
+          </Button>
+          <h2 className="text-4xl font-extrabold text-indigo-400">
+            Add New Work
+          </h2>
         </div>
 
         <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
@@ -78,13 +103,16 @@ function AddNewWork() {
                 Order Number
               </label>
               <input
-                type="text"
+                type="number"
                 id="orderNumber"
+                name="orderNumber"
                 className="w-full px-4 py-3 mt-2 text-white bg-gray-700 rounded-lg shadow-md focus:ring-4 focus:ring-indigo-500 focus:outline-none"
-                {...register("orderNumber", { required: "Order number is required" })}
+                {...register("orderNumber")}
               />
               {errors.orderNumber && (
-                <span className="text-red-500 text-sm">{errors.orderNumber.message}</span>
+                <span className="text-red-500 text-sm">
+                  {errors.orderNumber.message}
+                </span>
               )}
             </div>
 
@@ -98,10 +126,11 @@ function AddNewWork() {
               </label>
               <select
                 id="quantity"
+                name="quantity"
                 className="w-full px-4 py-3 mt-2 text-white bg-gray-700 rounded-lg shadow-md focus:ring-4 focus:ring-indigo-500 focus:outline-none"
-                {...register("quantity", { required: "Quantity is required" })}
+                {...register("quantity")}
               >
-                <option value="" disabled>Select quantity</option>
+                <option value={null}>Select quantity</option>
                 {quantities.map((quantity) => (
                   <option key={quantity} value={quantity}>
                     {quantity}
@@ -109,7 +138,9 @@ function AddNewWork() {
                 ))}
               </select>
               {errors.quantity && (
-                <span className="text-red-500 text-sm">{errors.quantity.message}</span>
+                <span className="text-red-500 text-sm">
+                  {errors.quantity.message}
+                </span>
               )}
             </div>
           </div>
@@ -123,11 +154,12 @@ function AddNewWork() {
               Product Name
             </label>
             <select
+              name="productName"
               id="productName"
               className="w-full px-4 py-3 mt-2 text-white bg-gray-700 rounded-lg shadow-md focus:ring-4 focus:ring-indigo-500 focus:outline-none"
-              {...register("productName", { required: "Product name is required" })}
+              {...register("productName")}
             >
-              <option value="" disabled>Select a product</option>
+              <option value={null}>Select a product</option>
               {products.map((product) => (
                 <option key={product.id} value={product.name}>
                   {product.name}
@@ -135,7 +167,9 @@ function AddNewWork() {
               ))}
             </select>
             {errors.productName && (
-              <span className="text-red-500 text-sm">{errors.productName.message}</span>
+              <span className="text-red-500 text-sm">
+                {errors.productName.message}
+              </span>
             )}
           </div>
 
@@ -149,11 +183,12 @@ function AddNewWork() {
                 Master Name
               </label>
               <select
+                name="masterName"
                 id="masterName"
                 className="w-full px-4 py-3 mt-2 text-white bg-gray-700 rounded-lg shadow-md focus:ring-4 focus:ring-indigo-500 focus:outline-none"
-                {...register("masterName", { required: "Master name is required" })}
+                {...register("masterName")}
               >
-                <option value="" disabled>Select a master</option>
+                <option value={null}>Select a master</option>
                 {masters.map((master) => (
                   <option key={master.id} value={master.name}>
                     {master.name}
@@ -161,7 +196,9 @@ function AddNewWork() {
                 ))}
               </select>
               {errors.masterName && (
-                <span className="text-red-500 text-sm">{errors.masterName.message}</span>
+                <span className="text-red-500 text-sm">
+                  {errors.masterName.message}
+                </span>
               )}
             </div>
 
@@ -173,11 +210,12 @@ function AddNewWork() {
                 Worker Name
               </label>
               <select
+                name="workerName"
                 id="workerName"
                 className="w-full px-4 py-3 mt-2 text-white bg-gray-700 rounded-lg shadow-md focus:ring-4 focus:ring-indigo-500 focus:outline-none"
-                {...register("workerName", { required: "Worker name is required" })}
+                {...register("workerName")}
               >
-                <option value="" disabled>Select a worker</option>
+                <option value={null}>Select a worker</option>
                 {workers.map((worker) => (
                   <option key={worker.id} value={worker.name}>
                     {worker.name}
@@ -185,7 +223,9 @@ function AddNewWork() {
                 ))}
               </select>
               {errors.workerName && (
-                <span className="text-red-500 text-sm">{errors.workerName.message}</span>
+                <span className="text-red-500 text-sm">
+                  {errors.workerName.message}
+                </span>
               )}
             </div>
           </div>
@@ -201,12 +241,15 @@ function AddNewWork() {
               </label>
               <input
                 type="text"
+                name="customerName"
                 id="customerName"
                 className="w-full px-4 py-3 mt-2 text-white bg-gray-700 rounded-lg shadow-md focus:ring-4 focus:ring-indigo-500 focus:outline-none"
-                {...register("customerName", { required: "Customer name is required" })}
+                {...register("customerName")}
               />
               {errors.customerName && (
-                <span className="text-red-500 text-sm">{errors.customerName.message}</span>
+                <span className="text-red-500 text-sm">
+                  {errors.customerName.message}
+                </span>
               )}
             </div>
 
@@ -219,12 +262,15 @@ function AddNewWork() {
               </label>
               <input
                 type="text"
+                name="address"
                 id="address"
                 className="w-full px-4 py-3 mt-2 text-white bg-gray-700 rounded-lg shadow-md focus:ring-4 focus:ring-indigo-500 focus:outline-none"
-                {...register("address", { required: "Address is required" })}
+                {...register("address")}
               />
               {errors.address && (
-                <span className="text-red-500 text-sm">{errors.address.message}</span>
+                <span className="text-red-500 text-sm">
+                  {errors.address.message}
+                </span>
               )}
             </div>
           </div>
@@ -240,12 +286,15 @@ function AddNewWork() {
               </label>
               <input
                 type="number"
+                name="workerRate"
                 id="workerRate"
                 className="w-full px-4 py-3 mt-2 text-white bg-gray-700 rounded-lg shadow-md focus:ring-4 focus:ring-indigo-500 focus:outline-none"
-                {...register("workerRate", { required: "Worker rate is required" })}
+                {...register("workerRate")}
               />
               {errors.workerRate && (
-                <span className="text-red-500 text-sm">{errors.workerRate.message}</span>
+                <span className="text-red-500 text-sm">
+                  {errors.workerRate.message}
+                </span>
               )}
             </div>
 
@@ -259,11 +308,14 @@ function AddNewWork() {
               <input
                 type="date"
                 id="deliveryDate"
+                name="deliveryDate"
                 className="w-full px-4 py-3 mt-2 text-white bg-gray-700 rounded-lg shadow-md focus:ring-4 focus:ring-indigo-500 focus:outline-none"
-                {...register("deliveryDate", { required: "Delivery date is required" })}
+                {...register("deliveryDate")}
               />
               {errors.deliveryDate && (
-                <span className="text-red-500 text-sm">{errors.deliveryDate.message}</span>
+                <span className="text-red-500 text-sm">
+                  {errors.deliveryDate.message}
+                </span>
               )}
             </div>
           </div>
@@ -271,7 +323,7 @@ function AddNewWork() {
           {/* Hidden Input for timestamp */}
           <input
             type="hidden"
-            value={moment().format("YYYY-MM-DD HH:mm:ss")}
+            defaultValue={moment().format("YYYY-MM-DD HH:mm:ss")}
             {...register("timestamp")}
           />
 
