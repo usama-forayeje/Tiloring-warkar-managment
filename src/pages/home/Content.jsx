@@ -1,5 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Filter } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
+import { getNewWork } from "@/features/newWork/newWorkSlice";
 
 function Content() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -7,6 +9,20 @@ function Content() {
   const [isFilterMenuOpen, setIsFilterMenuOpen] = useState(false);
   const filterMenuRef = useRef(null);
 
+
+
+
+    const data = useSelector( state => state.newWorks);
+    
+    const dispatch = useDispatch()
+  
+    useEffect(() => {
+      dispatch(getNewWork())
+    },[])
+  
+  
+    console.log(data);
+    
   // Sample user data
   const users = [
     { id: 1, name: "John Doe", email: "john@example.com" },
@@ -53,7 +69,7 @@ function Content() {
   });
 
   return (
-    <div className="p-4 absolute right-0 lg:w-9/12 md:w-9/12  w-full   z-10 ">
+    <div className="absolute right-0 z-10 w-full p-4 lg:w-9/12 md:w-9/12 ">
       {/* Search Bar */}
       <div className="sticky top-[72px]  rounded-md bg-white z-10  mb-6 flex items-center gap-4 shadow-sm py-8 px-4">
         <input
@@ -74,7 +90,7 @@ function Content() {
           </button>
 
           {isFilterMenuOpen && (
-            <div className="absolute right-0 mt-2 w-48 bg-white border rounded-lg shadow-md z-10">
+            <div className="absolute right-0 z-10 w-48 mt-2 bg-white border rounded-lg shadow-md">
               <button
                 onClick={() => setFilterOption("name")}
                 className="block w-full px-4 py-2 text-left hover:bg-gray-100"
@@ -99,10 +115,10 @@ function Content() {
       </div>
 
       {/* User Data */}
-      <div className="space-y-4 overflow-y-auto mt-16  scrollbar-hide">
-        {filteredUsers.map((user) => (
+      <div className="mt-16 space-y-4 overflow-y-auto scrollbar-hide">
+        {filteredUsers.map((user,index) => (
           <div
-            key={user.id}
+            key={index}
             className="flex items-center justify-between p-4 border rounded-lg shadow-md hover:bg-gray-100"
           >
             <div>

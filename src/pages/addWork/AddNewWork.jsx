@@ -6,21 +6,26 @@ import { useNavigate } from "react-router";
 import { Button } from "@/components/ui/button";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import { getDatabase, ref, set } from "firebase/database";
+import app from "@/database/firebaseConfig";
 
-const schema = yup.object({
-  orderNumber: yup.number().required("Order number is required"),
-  quantity: yup.number().positive().integer().required("Quantity is required"),
-  workerRate: yup.number().positive().integer().required("Worker rate is required"),
-  deliveryDate: yup.date().required("Delivery date is required"),
-  productName: yup.string().required("Product name is required"),
-  masterName: yup.string(),
-  workerName: yup.string(),
-  customerName: yup.string().required("Customer name is required"),
-  address: yup.string().required("Address is required"),
-}).required();
+const schema = yup
+  .object({
+    orderNumber: yup.number().required(),
+    quantity: yup.number().positive().integer().required(),
+    workerRate: yup.number(),
+    deliveryDate: yup.date().required(),
+    productName: yup.string().required(),
+    masterName: yup.string(),
+    workerName: yup.string(),
+    customerName: yup.string().required(),
+    CustomerNumber: yup.number().required(),
+  })
+  .required();
 
 function AddNewWork() {
   const navigate = useNavigate();
+  
 
   const {
     register,
@@ -38,51 +43,67 @@ function AddNewWork() {
     { id: 3, name: "Dining Table" },
   ];
   const workers = [
+    { id: 1122246, name: "Worker A" },
+    { id: 11543, name: "Worker A" },
+    { id: 11567, name: "Worker A" },
     { id: 1, name: "Worker A" },
-    { id: 2, name: "Worker B" },
-    { id: 3, name: "Worker C" },
+    { id: 112, name: "Worker A" },
+    { id: 11, name: "Worker A" },
   ];
 
   const masters = [
-    { id: 1, name: "Master Ali" },
-    { id: 2, name: "Master Karim" },
-    { id: 3, name: "Master Rahim" },
+    { id: 78807, name: "Master Ali" },
+    { id: 784634, name: "Master Ali" },
+    { id: 78566, name: "Master Ali" },
+    { id: 782333, name: "Master Ali" },
+    { id: 7835, name: "Master Ali" },
+    { id: 7854, name: "Master Ali" },
   ];
-  const quantities = [1, 2, 3, 5, 6, 7, 8, 9, 10]; // Example quantity options
+  const quantities = [1, ]; // Example quantity options
 
   const onSubmit = (data) => {
+    console.log("Form Data:", data);
+
     // Format the date using Moment.js
     const formattedDate = moment(data.deliveryDate, "YYYY-MM-DD").format(
       "MMMM Do, YYYY"
     );
 
-    console.log("Formatted Data:", {
-      ...data,
-      deliveryDate: formattedDate,
-      timestamp: data.timestamp,
-    });
+    // Generate a unique key for each new work entry
+    const uniqueId = crypto.randomUUID();
+    const db = getDatabase(app);
 
-    // SweetAlert2 Success Message
-    Swal.fire({
-      title: "Success!",
-      text: `Work has been added successfully. Delivery Date: ${formattedDate}`,
-      icon: "success",
-      confirmButtonText: "OK",
-    });
-
-    // Reset the form after submission
-    reset();
-    navigate(-1);
+    // Save data to Firebase
+    set(ref(db, `newWorks/${uniqueId}`), { ...data, deliveryDate: formattedDate })
+      .then(() => {
+        Swal.fire({
+          title: "Success!",
+          text: `Work has been added successfully. Delivery Date: ${formattedDate}`,
+          icon: "success",
+          confirmButtonText: "OK",
+        });
+        reset(); // Reset the form
+        navigate(-1); // Go back to the previous page
+      })
+      .catch((error) => {
+        console.error("Error saving data:", error);
+        Swal.fire({
+          title: "Error!",
+          text: "Failed to add work. Please try again later.",
+          icon: "error",
+          confirmButtonText: "OK",
+        });
+      });
   };
 
   return (
     <div className="flex items-center justify-center min-h-screen px-4 py-6 sm:px-6 lg:px-8 bg-gradient-to-r from-indigo-600 to-blue-500">
-      <div className="w-full max-w-3xl bg-gradient-to-br from-gray-800 to-gray-900 text-white shadow-2xl rounded-xl p-10">
-        <div className="flex justify-between items-center mb-8">
+      <div className="w-full max-w-3xl p-10 text-white shadow-2xl bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl">
+        <div className="flex items-center justify-between mb-8">
           {/* Prev Button */}
           <Button
             onClick={() => navigate(-1)}
-            className="flex items-center text-white text-lg hover:text-indigo-400"
+            className="flex items-center text-lg text-white hover:text-indigo-400"
           >
             <ArrowLeft size={24} className="mr-2" />
             <span>Go Back</span>
@@ -94,7 +115,7 @@ function AddNewWork() {
 
         <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
           {/* Order Number and Quantity */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
               <label
                 htmlFor="orderNumber"
@@ -109,9 +130,9 @@ function AddNewWork() {
                 className="w-full px-4 py-3 mt-2 text-white bg-gray-700 rounded-lg shadow-md focus:ring-4 focus:ring-indigo-500 focus:outline-none"
                 {...register("orderNumber")}
               />
-              {errors.orderNumber && (
-                <span className="text-red-500 text-sm">
-                  {errors.orderNumber.message}
+              {errors?.orderNumber && (
+                <span className="text-sm text-red-500">
+                  {errors?.orderNumber.message}
                 </span>
               )}
             </div>
@@ -130,16 +151,16 @@ function AddNewWork() {
                 className="w-full px-4 py-3 mt-2 text-white bg-gray-700 rounded-lg shadow-md focus:ring-4 focus:ring-indigo-500 focus:outline-none"
                 {...register("quantity")}
               >
-                <option value={null}>Select quantity</option>
+                <option value=''>Select quantity</option>
                 {quantities.map((quantity) => (
                   <option key={quantity} value={quantity}>
                     {quantity}
                   </option>
                 ))}
               </select>
-              {errors.quantity && (
-                <span className="text-red-500 text-sm">
-                  {errors.quantity.message}
+              {errors?.quantity && (
+                <span className="text-sm text-red-500">
+                  {errors?.quantity.message}
                 </span>
               )}
             </div>
@@ -159,22 +180,22 @@ function AddNewWork() {
               className="w-full px-4 py-3 mt-2 text-white bg-gray-700 rounded-lg shadow-md focus:ring-4 focus:ring-indigo-500 focus:outline-none"
               {...register("productName")}
             >
-              <option value={null}>Select a product</option>
+              <option value=''>Select a product</option>
               {products.map((product) => (
                 <option key={product.id} value={product.name}>
                   {product.name}
                 </option>
               ))}
             </select>
-            {errors.productName && (
-              <span className="text-red-500 text-sm">
-                {errors.productName.message}
+            {errors?.productName && (
+              <span className="text-sm text-red-500">
+                {errors?.productName.message}
               </span>
             )}
           </div>
 
           {/* Master Name and Worker Name */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
               <label
                 htmlFor="masterName"
@@ -188,16 +209,16 @@ function AddNewWork() {
                 className="w-full px-4 py-3 mt-2 text-white bg-gray-700 rounded-lg shadow-md focus:ring-4 focus:ring-indigo-500 focus:outline-none"
                 {...register("masterName")}
               >
-                <option value={null}>Select a master</option>
+                <option >Select a master</option>
                 {masters.map((master) => (
                   <option key={master.id} value={master.name}>
                     {master.name}
                   </option>
                 ))}
               </select>
-              {errors.masterName && (
-                <span className="text-red-500 text-sm">
-                  {errors.masterName.message}
+              {errors?.masterName && (
+                <span className="text-sm text-red-500">
+                  {errors?.masterName.message}
                 </span>
               )}
             </div>
@@ -215,23 +236,23 @@ function AddNewWork() {
                 className="w-full px-4 py-3 mt-2 text-white bg-gray-700 rounded-lg shadow-md focus:ring-4 focus:ring-indigo-500 focus:outline-none"
                 {...register("workerName")}
               >
-                <option value={null}>Select a worker</option>
+                <option value=''>Select a worker</option>
                 {workers.map((worker) => (
                   <option key={worker.id} value={worker.name}>
                     {worker.name}
                   </option>
                 ))}
               </select>
-              {errors.workerName && (
-                <span className="text-red-500 text-sm">
-                  {errors.workerName.message}
+              {errors?.workerName && (
+                <span className="text-sm text-red-500">
+                  {errors?.workerName.message}
                 </span>
               )}
             </div>
           </div>
 
           {/* Customer Name and Address */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
               <label
                 htmlFor="customerName"
@@ -246,37 +267,37 @@ function AddNewWork() {
                 className="w-full px-4 py-3 mt-2 text-white bg-gray-700 rounded-lg shadow-md focus:ring-4 focus:ring-indigo-500 focus:outline-none"
                 {...register("customerName")}
               />
-              {errors.customerName && (
-                <span className="text-red-500 text-sm">
-                  {errors.customerName.message}
+              {errors?.customerName && (
+                <span className="text-sm text-red-500">
+                  {errors?.customerName.message}
                 </span>
               )}
             </div>
 
             <div>
               <label
-                htmlFor="address"
+                htmlFor="CustomerNumber"
                 className="block text-lg font-medium text-indigo-300"
               >
-                Address
+                Customer Phone Number
               </label>
               <input
-                type="text"
-                name="address"
-                id="address"
+                type="number"
+                name="CustomerNumber"
+                id="CustomerNumber"
                 className="w-full px-4 py-3 mt-2 text-white bg-gray-700 rounded-lg shadow-md focus:ring-4 focus:ring-indigo-500 focus:outline-none"
-                {...register("address")}
+                {...register("CustomerNumber")}
               />
-              {errors.address && (
-                <span className="text-red-500 text-sm">
-                  {errors.address.message}
+              {errors?.address && (
+                <span className="text-sm text-red-500">
+                  {errors?.address.message}
                 </span>
               )}
             </div>
           </div>
 
           {/* Worker Rate and Delivery Date */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
               <label
                 htmlFor="workerRate"
@@ -291,9 +312,9 @@ function AddNewWork() {
                 className="w-full px-4 py-3 mt-2 text-white bg-gray-700 rounded-lg shadow-md focus:ring-4 focus:ring-indigo-500 focus:outline-none"
                 {...register("workerRate")}
               />
-              {errors.workerRate && (
-                <span className="text-red-500 text-sm">
-                  {errors.workerRate.message}
+              {errors?.workerRate && (
+                <span className="text-sm text-red-500">
+                  {errors?.workerRate.message}
                 </span>
               )}
             </div>
@@ -312,9 +333,9 @@ function AddNewWork() {
                 className="w-full px-4 py-3 mt-2 text-white bg-gray-700 rounded-lg shadow-md focus:ring-4 focus:ring-indigo-500 focus:outline-none"
                 {...register("deliveryDate")}
               />
-              {errors.deliveryDate && (
-                <span className="text-red-500 text-sm">
-                  {errors.deliveryDate.message}
+              {errors?.deliveryDate && (
+                <span className="text-sm text-red-500">
+                  {errors?.deliveryDate.message}
                 </span>
               )}
             </div>
@@ -328,12 +349,12 @@ function AddNewWork() {
           />
 
           {/* Submit Button */}
-          <button
+          <Button
             type="submit"
             className="w-full px-6 py-3 text-white transition duration-300 transform bg-indigo-600 rounded-lg shadow-md hover:scale-105 hover:bg-indigo-500 focus:outline-none focus:ring-4 focus:ring-indigo-500"
           >
             Add Work
-          </button>
+          </Button>
         </form>
       </div>
     </div>

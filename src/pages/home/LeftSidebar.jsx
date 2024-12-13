@@ -36,10 +36,10 @@ function LeftSidebar() {
 
 
   return (
-    <div className=" fixed left-0 top-[75px] z-50 h-screen w-5/12 flex">
+    <div className=" fixed left-0 top-[75px]  z-50 h-screen w-5/12 flex">
       {/* Sidebar Section */}
       <div
-        className={`w-64 bg-gradient-to-r z-20 bg-indigo-800 text-white px-6 py-4 fixed top-0 left-0 bottom-0 shadow-xl flex flex-col justify-between transition-all duration-500 transform ${
+        className={`w-64 overflow-auto pb-16 scrollbar-hide  bg-gradient-to-r z-20 bg-indigo-800 text-white px-6 py-4 fixed top-0 left-0 bottom-0 shadow-xl flex flex-col justify-between transition-all duration-500 transform ${
           isSidebarOpen ? "translate-x-0 pt-20 " : "-translate-x-full"
         } md:relative md:translate-x-0 md:w-64 md:block`}
       >
@@ -105,7 +105,7 @@ function LeftSidebar() {
           {/* Settings Dropdown */}
           <button
             onClick={() => setShowSettings((prev) => !prev)}
-            className="flex items-center justify-between w-full  font-medium text-blue-200 transition duration-300 transform hover:text-yellow-300"
+            className="flex items-center justify-between w-full font-medium text-blue-200 transition duration-300 transform hover:text-yellow-300"
           >
             <div className="flex items-center gap-2">
               <Settings className="w-5 h-5" />
@@ -120,7 +120,7 @@ function LeftSidebar() {
           >
             <Link
               to="/create"
-              className="flex items-center gap-3 px-3 py-2 font-medium transition-all duration-300 bg-purple-500 rounded-lg cursor-pointer hover:bg-purple-600"
+              className="flex items-center gap-3 px-3 py-2 mt-4 font-medium transition-all duration-300 bg-purple-500 rounded-lg cursor-pointer hover:bg-purple-600"
             >
               <PlusCircle className="w-4 h-4" />
               New Product
@@ -129,7 +129,7 @@ function LeftSidebar() {
               <PlusCircle className="w-5 h-5" />
               New Category
             </li>
-            <li className="flex items-center gap-3 px-3 py-2 font-medium transition-all duration-300 bg-purple-500 rounded-lg cursor-pointer hover:bg-purple-600">
+            <li className="flex p-3 px-3 py-2 mb-6 font-medium transition-all duration-300 bg-purple-500 rounded-lg cursor-pointer mbitems-center hover:bg-purple-600">
               <PlusCircle className="w-5 h-5" />
               New Level
             </li>
