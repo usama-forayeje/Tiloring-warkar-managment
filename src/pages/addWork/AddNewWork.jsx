@@ -71,7 +71,6 @@ function AddNewWork() {
             confirmButtonText: "OK",
           });
           reset(); // Reset the form
-          navigate(-1); // Go back to the previous page
         })
         .catch((error) => {
           console.error("Error updating data:", error);
@@ -94,7 +93,6 @@ function AddNewWork() {
             confirmButtonText: "OK",
           });
           reset(); // Reset the form
-          navigate(-1); // Go back to the previous page
         })
         .catch((error) => {
           console.error("Error saving data:", error);
@@ -105,7 +103,8 @@ function AddNewWork() {
             confirmButtonText: "OK",
           });
         });
-    }
+      }
+      navigate(-1); // Go back to the previous page
   };
   
   // UseEffect to fetch data for editing
