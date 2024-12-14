@@ -1,52 +1,28 @@
-import { useState, useRef, useEffect } from "react";
-import { Filter } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getNewWork } from "@/features/newWork/newWorkSlice";
+import { Button } from "@/components/ui/button";
+import { ChevronDown } from "lucide-react";
 
 function Content() {
   const [searchTerm, setSearchTerm] = useState("");
-  const [filterOption, setFilterOption] = useState(null);
   const [isFilterMenuOpen, setIsFilterMenuOpen] = useState(false);
   const filterMenuRef = useRef(null);
 
+  const dispatch = useDispatch();
+  const allWorkData = useSelector((state) => state.newWorks);
 
+  useEffect(() => {
+    dispatch(getNewWork());
+  }, [dispatch]);
 
-
-    const data = useSelector( state => state.newWorks);
-    
-    const dispatch = useDispatch()
-  
-    useEffect(() => {
-      dispatch(getNewWork())
-    },[])
-  
-  
-    console.log(data);
-    
-  // Sample user data
-  const users = [
-    { id: 1, name: "John Doe", email: "john@example.com" },
-    { id: 2, name: "Jane Smith", email: "jane@example.com" },
-    { id: 3, name: "Alice Johnson", email: "alice@example.com" },
-    { id: 4, name: "Bob Brown", email: "bob@example.com" },
-    { id: 1, name: "John Doe", email: "john@example.com" },
-    { id: 2, name: "Jane Smith", email: "jane@example.com" },
-    { id: 3, name: "Alice Johnson", email: "alice@example.com" },
-    { id: 4, name: "Bob Brown", email: "bob@example.com" },
-    { id: 1, name: "John Doe", email: "john@example.com" },
-    { id: 2, name: "Jane Smith", email: "jane@example.com" },
-    { id: 3, name: "Alice Johnson", email: "alice@example.com" },
-    { id: 4, name: "Bob Brown", email: "bob@example.com" },
-    { id: 1, name: "John Doe", email: "john@example.com" },
-    { id: 2, name: "Jane Smith", email: "jane@example.com" },
-    { id: 3, name: "Alice Johnson", email: "alice@example.com" },
-    { id: 4, name: "Bob Brown", email: "bob@example.com" },
-  ];
-
-  // Close filter menu on outside click
+  // Handle click outside of the filter menu
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (filterMenuRef.current && !filterMenuRef.current.contains(event.target)) {
+      if (
+        filterMenuRef.current &&
+        !filterMenuRef.current.contains(event.target)
+      ) {
         setIsFilterMenuOpen(false);
       }
     };
@@ -56,57 +32,50 @@ function Content() {
     };
   }, []);
 
-  // Filter users based on search term and filter option
-  const filteredUsers = users.filter((user) => {
-    const matchesSearch =
-      user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchTerm.toLowerCase());
+  // Filtered Data based on Search Term
+  const filteredData = allWorkData?.newWork?.filter(
+    (item) =>
+      item.customerName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.orderNumber?.toString().includes(searchTerm)
+  );
 
-    if (!filterOption) return matchesSearch;
-
-    // Add filter logic here if options affect filtering
-    return matchesSearch; // Placeholder for specific filter logic
-  });
+  // Reverse the filtered data to show the latest items first
+  const reversedFilteredData = filteredData?.reverse();
 
   return (
-    <div className="absolute right-0 z-10 w-full p-4 lg:w-9/12 md:w-9/12 ">
+    <div className="absolute right-0 z-10 w-full p-4 lg:w-9/12 md:w-9/12">
       {/* Search Bar */}
-      <div className="sticky top-[72px]  rounded-md bg-white z-10  mb-6 flex items-center gap-4 shadow-sm py-8 px-4">
+      <div className="sticky top-[72px] rounded-md bg-white z-10 mb-6 flex items-center gap-4 shadow-sm py-8 px-4">
         <input
           type="text"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          placeholder="Search users..."
+          placeholder="Search by customer name or order number..."
           className="flex-grow px-4 py-2 border rounded-lg shadow focus:outline-none focus:ring-2 focus:ring-indigo-500"
         />
-        
-        {/* Filter Icon */}
+
+        {/* Filter Button */}
         <div className="relative" ref={filterMenuRef}>
           <button
             onClick={() => setIsFilterMenuOpen((prev) => !prev)}
-            className="p-2 bg-gray-100 border rounded-lg hover:bg-gray-200"
+            className="flex items-center px-4 py-2 bg-gray-100 border rounded-lg hover:bg-gray-200"
           >
-            <Filter className="w-5 h-5 text-gray-600" />
+            Filter
+            <ChevronDown className="w-4 h-4 ml-2 text-gray-600" />
           </button>
 
           {isFilterMenuOpen && (
             <div className="absolute right-0 z-10 w-48 mt-2 bg-white border rounded-lg shadow-md">
-              <button
-                onClick={() => setFilterOption("name")}
-                className="block w-full px-4 py-2 text-left hover:bg-gray-100"
-              >
+              <button className="block w-full px-4 py-2 text-left hover:bg-gray-100">
                 Filter by Name
               </button>
-              <button
-                onClick={() => setFilterOption("email")}
-                className="block w-full px-4 py-2 text-left hover:bg-gray-100"
-              >
-                Filter by Email
+              <button className="block w-full px-4 py-2 text-left hover:bg-gray-100">
+                Filter by New Date
               </button>
-              <button
-                onClick={() => setFilterOption(null)}
-                className="block w-full px-4 py-2 text-left hover:bg-gray-100"
-              >
+              <button className="block w-full px-4 py-2 text-left hover:bg-gray-100">
+                Filter by Old Date
+              </button>
+              <button className="block w-full px-4 py-2 text-left hover:bg-gray-100">
                 Clear Filters
               </button>
             </div>
@@ -114,22 +83,41 @@ function Content() {
         </div>
       </div>
 
-      {/* User Data */}
-      <div className="mt-16 space-y-4 overflow-y-auto scrollbar-hide">
-        {filteredUsers.map((user,index) => (
-          <div
-            key={index}
-            className="flex items-center justify-between p-4 border rounded-lg shadow-md hover:bg-gray-100"
-          >
-            <div>
-              <h3 className="text-lg font-medium">{user.name}</h3>
-              <p className="text-sm text-gray-600">{user.email}</p>
+      {/* Filtered User Data */}
+      <div className="mt-8 space-y-6">
+        {reversedFilteredData?.length > 0 ? (
+          filteredData.map((item, index) => (
+            <div
+              key={index}
+              className="w-full p-6 transition duration-300 ease-in-out transform bg-white border rounded-lg shadow-md hover:scale-105"
+            >
+              {/* Card Header */}
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold">{item.customerName}</h3>
+              </div>
+
+              {/* Card Content */}
+              <div className="flex items-center justify-between">
+                <div className="space-y-2">
+                  <p className="text-sm text-gray-600">
+                    Quantity: {item.quantity}
+                  </p>
+                  <p className="text-sm text-gray-600">
+                    Order Number: {item.orderNumber}
+                  </p>
+                </div>
+                <div className="flex items-center space-x-4">
+                  <p className="text-sm text-gray-600">{item.deliveryDate}</p>
+                  <Button className="px-4 py-2 text-white bg-indigo-500 rounded-lg hover:bg-indigo-600">
+                    Edit
+                  </Button>
+                </div>
+              </div>
             </div>
-            <button className="px-4 py-2 text-white bg-indigo-500 rounded-lg hover:bg-indigo-600">
-              View
-            </button>
-          </div>
-        ))}
+          ))
+        ) : (
+          <p className="text-center text-gray-500">No results found.</p>
+        )}
       </div>
     </div>
   );

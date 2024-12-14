@@ -1,10 +1,11 @@
-import { getDatabase, ref, onValue } from "firebase/database";
+import { getDatabase, ref, onValue, set } from "firebase/database";
 import app from "./firebaseConfig";
 
 const db = getDatabase(app);
 
-export const getFirebaseData = async () => {
-  const starCountRef = ref(db, "newWorks");
+
+export const getFirebaseData = async (tableName) => {
+  const starCountRef = ref(db, tableName);
 
   return new Promise((resolve, reject) => {
     try {
@@ -23,3 +24,9 @@ export const getFirebaseData = async () => {
     }
   });
 };
+
+
+export const setFirebaseData = () => {
+      // Save data to Firebase
+      set(ref(db, `newWorks/`))
+}

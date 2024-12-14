@@ -5,23 +5,12 @@ import { ArrowLeft } from "lucide-react"; // Lucide icon for prev button
 import { useNavigate } from "react-router";
 import { Button } from "@/components/ui/button";
 import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
+
 import { getDatabase, ref, set } from "firebase/database";
 import app from "@/database/firebaseConfig";
+import { newWorkFormSchema } from "@/validations/validationSchema";
 
-const schema = yup
-  .object({
-    orderNumber: yup.number().required(),
-    quantity: yup.number().positive().integer().required(),
-    workerRate: yup.number(),
-    deliveryDate: yup.date().required(),
-    productName: yup.string().required(),
-    masterName: yup.string(),
-    workerName: yup.string(),
-    customerName: yup.string().required(),
-    CustomerNumber: yup.number().required(),
-  })
-  .required();
+
 
 function AddNewWork() {
   const navigate = useNavigate();
@@ -33,7 +22,7 @@ function AddNewWork() {
     reset,
     formState: { errors },
   } = useForm({
-    resolver: yupResolver(schema),
+    resolver: yupResolver(newWorkFormSchema),
   });
 
   // Dynamic Data for Dropdowns
@@ -62,7 +51,6 @@ function AddNewWork() {
   const quantities = [1, ]; // Example quantity options
 
   const onSubmit = (data) => {
-    console.log("Form Data:", data);
 
     // Format the date using Moment.js
     const formattedDate = moment(data.deliveryDate, "YYYY-MM-DD").format(
@@ -288,9 +276,9 @@ function AddNewWork() {
                 className="w-full px-4 py-3 mt-2 text-white bg-gray-700 rounded-lg shadow-md focus:ring-4 focus:ring-indigo-500 focus:outline-none"
                 {...register("CustomerNumber")}
               />
-              {errors?.address && (
+              {errors?.CustomerNumber && (
                 <span className="text-sm text-red-500">
-                  {errors?.address.message}
+                  {errors?.CustomerNumber.message}
                 </span>
               )}
             </div>

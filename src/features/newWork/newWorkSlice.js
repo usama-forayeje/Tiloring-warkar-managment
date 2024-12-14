@@ -9,7 +9,7 @@ const initialState = {
 };
 
 export const getNewWork = createAsyncThunk("newWork/getNewWork", async () => {
-  let data = await getFirebaseData();
+  let data = await getFirebaseData("newWorks");
 
 
   return data;
