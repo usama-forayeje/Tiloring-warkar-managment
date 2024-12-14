@@ -6,9 +6,11 @@ import { useNavigate, useParams } from "react-router";
 import { Button } from "@/components/ui/button";
 import { yupResolver } from "@hookform/resolvers/yup";
 
-import { getDatabase, ref, set } from "firebase/database";
+import { getDatabase, push, ref, set } from "firebase/database";
 import app from "@/database/firebaseConfig";
 import { newWorkFormSchema } from "@/validations/validationSchema";
+import { useEffect } from "react";
+import { getUpdateDataOnEdit } from "@/database/firebaseUtils";
 
 
 
@@ -26,6 +28,7 @@ function AddNewWork() {
     resolver: yupResolver(newWorkFormSchema),
   });
 
+  
   // Dynamic Data for Dropdowns
   const products = [
     { id: 1, name: "Elegant Queen Bed" },
@@ -52,38 +55,81 @@ function AddNewWork() {
   const quantities = [1, ]; // Example quantity options
 
   const onSubmit = (data) => {
-
     // Format the date using Moment.js
-    const formattedDate = moment(data.deliveryDate, "YYYY-MM-DD").format(
-      "MMMM Do, YYYY"
-    );
-
-    // Generate a unique key for each new work entry
-    const uniqueId = crypto.randomUUID();
+    const formattedDate = moment(data.deliveryDate, "YYYY-MM-DD").format("MMMM Do, YYYY");
+  
     const db = getDatabase(app);
-
-    // Save data to Firebase
-    set(ref(db, `newWorks/${uniqueId}`), { ...data, deliveryDate: formattedDate })
-      .then(() => {
-        Swal.fire({
-          title: "Success!",
-          text: `Work has been added successfully. Delivery Date: ${formattedDate}`,
-          icon: "success",
-          confirmButtonText: "OK",
+  
+    if (params.id) {
+      // Update existing work
+      set(ref(db, `newWorks/${params.id}`), { ...data, deliveryDate: formattedDate })
+        .then(() => {
+          Swal.fire({
+            title: "Success!",
+            text: `Work has been updated successfully. Delivery Date: ${formattedDate}`,
+            icon: "success",
+            confirmButtonText: "OK",
+          });
+          reset(); // Reset the form
+          navigate(-1); // Go back to the previous page
+        })
+        .catch((error) => {
+          console.error("Error updating data:", error);
+          Swal.fire({
+            title: "Error!",
+            text: "Failed to update work. Please try again later.",
+            icon: "error",
+            confirmButtonText: "OK",
+          });
         });
-        reset(); // Reset the form
-        navigate(-1); // Go back to the previous page
-      })
-      .catch((error) => {
-        console.error("Error saving data:", error);
-        Swal.fire({
-          title: "Error!",
-          text: "Failed to add work. Please try again later.",
-          icon: "error",
-          confirmButtonText: "OK",
+    } else {
+      // Add new work
+      const uniqueId = crypto.randomUUID(); // Replace with UUID library if needed
+      set(ref(db, `newWorks/${uniqueId}`), { ...data, deliveryDate: formattedDate })
+        .then(() => {
+          Swal.fire({
+            title: "Success!",
+            text: `Work has been added successfully. Delivery Date: ${formattedDate}`,
+            icon: "success",
+            confirmButtonText: "OK",
+          });
+          reset(); // Reset the form
+          navigate(-1); // Go back to the previous page
+        })
+        .catch((error) => {
+          console.error("Error saving data:", error);
+          Swal.fire({
+            title: "Error!",
+            text: "Failed to add work. Please try again later.",
+            icon: "error",
+            confirmButtonText: "OK",
+          });
         });
-      });
+    }
   };
+  
+  // UseEffect to fetch data for editing
+  useEffect(() => {
+    async function getData() {
+      try {
+        const res = await getUpdateDataOnEdit("newWorks/" + params.id);
+        console.log(res);
+  
+        if (res.deliveryDate) {
+          // Convert the deliveryDate to "YYYY-MM-DD" format for the input
+          res.deliveryDate = moment(res.deliveryDate, "MMMM Do, YYYY").format("YYYY-MM-DD");
+        }
+        reset(res);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    }
+  
+    if (params.id) {
+      getData();
+    }
+  }, [params.id, reset]);
+
 
   return (
     <div className="flex items-center justify-center min-h-screen px-4 py-6 sm:px-6 lg:px-8 bg-gradient-to-r from-indigo-600 to-blue-500">

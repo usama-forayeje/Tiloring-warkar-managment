@@ -114,14 +114,14 @@ function Content() {
             className={`px-2 py-1 text-xs font-medium text-white rounded-md ${
               item.delivered
                 ? "bg-blue-500" // Delivered হলে
-                : item.masterName || item?.workerName !== ""
+                : item.masterName || item?.workerName 
                 ? "bg-yellow-500" // MasterName থাকলে
                 : "bg-green-500" // Default New
             }`}
           >
             {item.delivered
               ? "Delivered"
-              : item.masterName || item?.workerName !== ""
+              : item.masterName || item?.workerName 
               ? "Pending"
               : "New"}
           </span>

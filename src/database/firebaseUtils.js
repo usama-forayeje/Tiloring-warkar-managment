@@ -30,7 +30,7 @@ export const getUpdateDataOnEdit = async (tableName) => {
   return new Promise((resolve, reject) => {
     try {
       onValue(starCountRef, (snapshot) => {
-        resolve(snapshot);
+        resolve(snapshot.val());
       });
     } catch (error) {
       reject(error);
@@ -38,7 +38,7 @@ export const getUpdateDataOnEdit = async (tableName) => {
   });
 };
 
-export const setFirebaseData = (tableName, data) => {
+export const setFirebaseData = async (tableName, data) => {
   // Save data to Firebase
   set(ref(db, tableName), data);
 };
