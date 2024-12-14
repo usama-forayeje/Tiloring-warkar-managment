@@ -8,7 +8,8 @@ function App() {
     
       <Routes>
         <Route path="/" element={<Main />} />
-        <Route path="/add-client" element={<AddNewWork />} />
+        <Route path="/add-work" element={<AddNewWork />} />
+        <Route path="/edit-work/:id" element={<AddNewWork />} />
         <Route path="*" element={<Error/>} />
       </Routes>
     

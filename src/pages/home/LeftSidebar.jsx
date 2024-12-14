@@ -53,7 +53,7 @@ function LeftSidebar() {
             Home
           </Link>
           <Link
-            to="/add-client"
+            to="/add-work"
             className="flex items-center gap-2 mb-4 font-medium text-blue-200 duration-300 hover:text-white"
           >
             <UserPlus className="w-5 h-5" />

@@ -2,7 +2,7 @@ import { useForm } from "react-hook-form";
 import Swal from "sweetalert2";
 import moment from "moment";
 import { ArrowLeft } from "lucide-react"; // Lucide icon for prev button
-import { useNavigate } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { Button } from "@/components/ui/button";
 import { yupResolver } from "@hookform/resolvers/yup";
 
@@ -14,6 +14,7 @@ import { newWorkFormSchema } from "@/validations/validationSchema";
 
 function AddNewWork() {
   const navigate = useNavigate();
+  const params = useParams()
   
 
   const {
@@ -97,7 +98,8 @@ function AddNewWork() {
             <span>Go Back</span>
           </Button>
           <h2 className="text-4xl font-extrabold text-indigo-400">
-            Add New Work
+            {params.id ? 'Update Work' : "Add New Work"}
+            
           </h2>
         </div>
 
@@ -168,7 +170,7 @@ function AddNewWork() {
               className="w-full px-4 py-3 mt-2 text-white bg-gray-700 rounded-lg shadow-md focus:ring-4 focus:ring-indigo-500 focus:outline-none"
               {...register("productName")}
             >
-              <option value=''>Select a product</option>
+              <option >Select a product</option>
               {products.map((product) => (
                 <option key={product.id} value={product.name}>
                   {product.name}
@@ -183,6 +185,7 @@ function AddNewWork() {
           </div>
 
           {/* Master Name and Worker Name */}
+          {params.id &&
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
               <label
@@ -197,7 +200,7 @@ function AddNewWork() {
                 className="w-full px-4 py-3 mt-2 text-white bg-gray-700 rounded-lg shadow-md focus:ring-4 focus:ring-indigo-500 focus:outline-none"
                 {...register("masterName")}
               >
-                <option >Select a master</option>
+                <option value={''}>Select a master</option>
                 {masters.map((master) => (
                   <option key={master.id} value={master.name}>
                     {master.name}
@@ -224,7 +227,7 @@ function AddNewWork() {
                 className="w-full px-4 py-3 mt-2 text-white bg-gray-700 rounded-lg shadow-md focus:ring-4 focus:ring-indigo-500 focus:outline-none"
                 {...register("workerName")}
               >
-                <option value=''>Select a worker</option>
+                <option value={''}>Select a worker</option>
                 {workers.map((worker) => (
                   <option key={worker.id} value={worker.name}>
                     {worker.name}
@@ -238,6 +241,8 @@ function AddNewWork() {
               )}
             </div>
           </div>
+          }
+          
 
           {/* Customer Name and Address */}
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -285,6 +290,7 @@ function AddNewWork() {
           </div>
 
           {/* Worker Rate and Delivery Date */}
+          {params.id &&
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
               <label
@@ -307,7 +313,10 @@ function AddNewWork() {
               )}
             </div>
 
-            <div>
+            
+          </div>
+           }
+          <div>
               <label
                 htmlFor="deliveryDate"
                 className="block text-lg font-medium text-indigo-300"
@@ -327,7 +336,6 @@ function AddNewWork() {
                 </span>
               )}
             </div>
-          </div>
 
           {/* Hidden Input for timestamp */}
           <input
@@ -335,13 +343,32 @@ function AddNewWork() {
             defaultValue={moment().format("YYYY-MM-DD HH:mm:ss")}
             {...register("timestamp")}
           />
+          {/* Checkbox for Delivered */}
+          {params.id && 
+           <div className="flex items-center space-x-3">
+            <input
+              type="checkbox"
+              id="delivered"
+              name="delivered"
+              className="w-6 h-6 text-indigo-500 bg-gray-700 border-gray-600 rounded focus:ring-indigo-500"
+              {...register("delivered")}
+            />
+            <label
+              htmlFor="delivered"
+              className="text-lg font-medium text-indigo-300"
+            >
+              Delivered
+            </label>
+          </div>
+          }
+          
 
           {/* Submit Button */}
           <Button
             type="submit"
             className="w-full px-6 py-3 text-white transition duration-300 transform bg-indigo-600 rounded-lg shadow-md hover:scale-105 hover:bg-indigo-500 focus:outline-none focus:ring-4 focus:ring-indigo-500"
           >
-            Add Work
+            {params.id ? 'Update Work' : "Add New Work"}
           </Button>
         </form>
       </div>
@@ -350,3 +377,5 @@ function AddNewWork() {
 }
 
 export default AddNewWork;
+
+
