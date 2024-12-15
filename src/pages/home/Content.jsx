@@ -7,11 +7,15 @@ import {
   ChevronDown,
   CircleUserRound,
   Clock,
+  LoaderCircle,
+  Search,
   Truck,
 } from "lucide-react";
 import { Link } from "react-router";
+import { Button } from "@/components/ui/button";
 
 function Content() {
+  const [isLoading, setIsLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [isFilterMenuOpen, setIsFilterMenuOpen] = useState(false);
   const filterMenuRef = useRef(null);
@@ -38,6 +42,17 @@ function Content() {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  useEffect(() => {
+    if (searchTerm) {
+      setIsLoading(true);
+      const timer = setTimeout(() => {
+        setIsLoading(false);
+      }, 500);
+      return () => clearTimeout(timer);
+    }
+    setIsLoading(false);
+  }, [searchTerm]);
 
   // Filtered Data based on Search Term
   const filteredData = allWorkData?.newWork?.filter(
@@ -189,37 +204,59 @@ function Content() {
   return (
     <div className="absolute right-0 z-10 w-full p-4 -top-12">
       {/* Search Bar */}
-      <div className="sticky top-[72px] rounded-md bg-white z-10 mb-6 flex items-center gap-4 shadow-sm py-8 px-4">
-        <input
-          type="text"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          placeholder="Search by customer name or order number..."
-          className="flex-grow px-4 py-2 border rounded-lg shadow focus:outline-none focus:ring-2 focus:ring-indigo-500"
-        />
+      <div className="sticky top-[72px] z-10 mb-6 bg-white shadow-md rounded-lg flex items-center justify-center lg:gap-8 p-4 sm:p-6 gap-4">
+        {/* Search Input Section */}
+        <div className="relative flex items-center flex-grow w-full max-w-lg gap-3">
+          {/* Search Icon */}
+          <div className="flex items-center justify-center w-10 h-10 rounded-full">
+            {isLoading ? (
+              <LoaderCircle
+                className="animate-spin"
+                size={18}
+                strokeWidth={2}
+                role="status"
+                aria-label="Loading..."
+              />
+            ) : (
+              <Search size={20} strokeWidth={2} aria-hidden="true" />
+            )}
+          </div>
+
+          {/* Input Field */}
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="Search by name, phone, or order..."
+            className="w-full px-4 py-2 text-sm border rounded-lg shadow-sm placeholder:ellipsis placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+          />
+        </div>
 
         {/* Filter Button */}
-        <div className="relative" ref={filterMenuRef}>
-          <button
+        <div className="relative">
+          <Button
             onClick={() => setIsFilterMenuOpen((prev) => !prev)}
-            className="flex items-center px-4 py-2 bg-gray-100 border rounded-lg hover:bg-gray-200"
+            className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 border border-gray-300 rounded-lg hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500"
           >
             Filter
-            <ChevronDown className="w-4 h-4 ml-2 text-gray-600" />
-          </button>
+            <ChevronDown className="w-4 h-4 text-gray-500" />
+          </Button>
 
           {isFilterMenuOpen && (
-            <div className="absolute right-0 z-10 w-48 mt-2 bg-white border rounded-lg shadow-md">
-              <button className="block w-full px-4 py-2 text-left hover:bg-gray-100">
+            <div
+              ref={filterMenuRef}
+              className="absolute right-0 z-20 w-48 mt-2 bg-white border border-gray-200 divide-y divide-gray-100 rounded-lg shadow-lg"
+            >
+              <button className="block w-full px-4 py-2 text-sm text-left text-gray-700 hover:bg-gray-100">
                 Filter by Name
               </button>
-              <button className="block w-full px-4 py-2 text-left hover:bg-gray-100">
+              <button className="block w-full px-4 py-2 text-sm text-left text-gray-700 hover:bg-gray-100">
                 Filter by New Date
               </button>
-              <button className="block w-full px-4 py-2 text-left hover:bg-gray-100">
+              <button className="block w-full px-4 py-2 text-sm text-left text-gray-700 hover:bg-gray-100">
                 Filter by Old Date
               </button>
-              <button className="block w-full px-4 py-2 text-left hover:bg-gray-100">
+              <button className="block w-full px-4 py-2 text-sm text-left text-gray-700 hover:bg-gray-100">
                 Clear Filters
               </button>
             </div>
@@ -235,3 +272,5 @@ function Content() {
 }
 
 export default Content;
+
+

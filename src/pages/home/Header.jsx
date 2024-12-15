@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { User } from "lucide-react";
+import LoginIcon from "@/components/ui/loginIcon";
 
 function Header() {
   return (
@@ -20,28 +21,16 @@ function Header() {
       </div>
 
       {/* Right Side: Profile and Login */}
-      <div className="flex items-center gap-4">
-        <button className="flex items-center gap-2 text-white hover:text-yellow-300">
-          <User className="w-5 h-5" />
-          <span>Profile</span>
-        </button>
-        <Link
-          to="/login"
-          className="px-4 py-2 font-medium text-indigo-600 transition bg-white rounded-lg hover:bg-yellow-400 hover:text-white"
+        <div
+          className="font-medium text-indigo-600 transition bg-white rounded-lg hover:bg-yellow-400 hover:text-white"
         >
-          Log In
-        </Link>
-      </div>
+          <LoginIcon/>
+        </div>
 
-      {/* Mobile Menu Toggle */}
-      {/* <button
-        className="block text-white md:hidden focus:outline-none"
-        onClick={() => setIsMenuOpen(!isMenuOpen)}
-      >
-        {isMenuOpen ? <LogIn className="w-6 h-6" /> : <User className="w-6 h-6" />}
-      </button> */}
+    
     </header>
   );
 }
 
 export default Header;
+

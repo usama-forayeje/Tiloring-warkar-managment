@@ -12,6 +12,8 @@ import app from "@/database/firebaseConfig";
 import { newWorkFormSchema } from "@/validations/validationSchema";
 import { useEffect } from "react";
 import { getUpdateDataOnEdit } from "@/database/firebaseUtils";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 
 
 
@@ -140,7 +142,12 @@ function AddNewWork() {
             onClick={() => navigate(-1)}
             className="flex items-center text-lg text-white hover:text-indigo-400"
           >
-            <ArrowLeft size={24} className="mr-2" />
+            <ArrowLeft
+        className="-ms-1 me-2 opacity-60 transition-transform group-hover:-translate-x-0.5"
+        size={16}
+        strokeWidth={2}
+        aria-hidden="true"
+      />
             <span>Go Back</span>
           </Button>
           <h2 className="text-4xl font-extrabold text-indigo-400">
@@ -153,13 +160,13 @@ function AddNewWork() {
           {/* Order Number and Quantity */}
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
-              <label
+              <Label
                 htmlFor="orderNumber"
                 className="block text-lg font-medium text-indigo-300"
               >
                 Order Number
-              </label>
-              <input
+              </Label>
+              <Input
                 type="number"
                 id="orderNumber"
                 name="orderNumber"
@@ -175,12 +182,12 @@ function AddNewWork() {
 
             {/* Quantity Dropdown */}
             <div>
-              <label
+              <Label
                 htmlFor="quantity"
                 className="block text-lg font-medium text-indigo-300"
               >
                 Quantity
-              </label>
+              </Label>
               <select
                 id="quantity"
                 name="quantity"
@@ -204,12 +211,12 @@ function AddNewWork() {
 
           {/* Product Name Dropdown */}
           <div>
-            <label
+            <Label
               htmlFor="productName"
               className="block text-lg font-medium text-indigo-300"
             >
               Product Name
-            </label>
+            </Label>
             <select
               name="productName"
               id="productName"
@@ -261,12 +268,12 @@ function AddNewWork() {
             </div>
 
             <div>
-              <label
+              <Label
                 htmlFor="workerName"
                 className="block text-lg font-medium text-indigo-300"
               >
                 Worker Name
-              </label>
+              </Label>
               <select
                 name="workerName"
                 id="workerName"
@@ -293,13 +300,13 @@ function AddNewWork() {
           {/* Customer Name and Address */}
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
-              <label
+              <Label
                 htmlFor="customerName"
                 className="block text-lg font-medium text-indigo-300"
               >
                 Customer Name
-              </label>
-              <input
+              </Label>
+              <Input
                 type="text"
                 name="customerName"
                 id="customerName"
@@ -314,13 +321,13 @@ function AddNewWork() {
             </div>
 
             <div>
-              <label
+              <Label
                 htmlFor="CustomerNumber"
                 className="block text-lg font-medium text-indigo-300"
               >
                 Customer Phone Number
-              </label>
-              <input
+              </Label>
+              <Input
                 type="number"
                 name="CustomerNumber"
                 id="CustomerNumber"
@@ -339,13 +346,13 @@ function AddNewWork() {
           {params.id &&
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
-              <label
+              <Label
                 htmlFor="workerRate"
                 className="block text-lg font-medium text-indigo-300"
               >
                 Worker Rate
-              </label>
-              <input
+              </Label>
+              <Input
                 type="number"
                 name="workerRate"
                 id="workerRate"
@@ -363,13 +370,13 @@ function AddNewWork() {
           </div>
            }
           <div>
-              <label
+              <Label
                 htmlFor="deliveryDate"
                 className="block text-lg font-medium text-indigo-300"
               >
                 Delivery Date
-              </label>
-              <input
+              </Label>
+              <Input
                 type="date"
                 id="deliveryDate"
                 name="deliveryDate"
@@ -384,7 +391,7 @@ function AddNewWork() {
             </div>
 
           {/* Hidden Input for timestamp */}
-          <input
+          <Input
             type="hidden"
             defaultValue={moment().format("YYYY-MM-DD HH:mm:ss")}
             {...register("timestamp")}
@@ -392,19 +399,19 @@ function AddNewWork() {
           {/* Checkbox for Delivered */}
           {params.id && 
            <div className="flex items-center space-x-3">
-            <input
+            <Input
               type="checkbox"
               id="delivered"
               name="delivered"
               className="w-6 h-6 text-indigo-500 bg-gray-700 border-gray-600 rounded focus:ring-indigo-500"
               {...register("delivered")}
             />
-            <label
+            <Label
               htmlFor="delivered"
               className="text-lg font-medium text-indigo-300"
             >
               Delivered
-            </label>
+            </Label>
           </div>
           }
           
@@ -423,5 +430,11 @@ function AddNewWork() {
 }
 
 export default AddNewWork;
+
+
+
+
+
+
 
 
