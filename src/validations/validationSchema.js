@@ -6,7 +6,10 @@ export const newWorkFormSchema = yup
       .number()
       .required("Order Number is mandatory and must be a number"),
     quantity: yup.number().required("Please select a valid quantity"),
-    workerRate: yup.number().min(0, "Worker Rate must be a positive number"),
+    workerRate: yup
+      .number()
+      .nullable(true) // Worker Rate is not required, allows null or undefined
+      .typeError("Worker Rate must be a number"),
     workerName: yup.string().nullable(true),
 
     deliveryDate: yup
@@ -24,3 +27,7 @@ export const newWorkFormSchema = yup
     delivered: yup.boolean().default(false),
   })
   .required();
+
+
+
+  

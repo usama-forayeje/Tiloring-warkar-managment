@@ -3,9 +3,9 @@ import { User } from "lucide-react";
 
 function Header() {
   return (
-    <header className="bg-gradient-to-r  fixed right-0 w-full top-0 z-20 from-indigo-600 to-blue-500 text-white p-4 shadow-md flex items-center justify-between">
+    <header className="flex items-center justify-between p-4 text-white shadow-md bg-gradient-to-r from-indigo-600 to-blue-500">
       {/* Left Side: Logo */}
-      <div className="flex items-center mt-1 gap-2">
+      <div className="flex items-center gap-2 mt-1">
         <img
           src="https://placehold.co/400"
           alt="Shop Logo"
@@ -15,7 +15,7 @@ function Header() {
       </div>
 
       {/* Middle: Shop Name */}
-      <div className="hidden md:block text-lg font-medium text-center">
+      <div className="hidden text-lg font-medium text-center md:block">
         Your Favorite Shopping Destination
       </div>
 
@@ -27,7 +27,7 @@ function Header() {
         </button>
         <Link
           to="/login"
-          className="bg-white text-indigo-600 px-4 py-2 rounded-lg font-medium hover:bg-yellow-400 hover:text-white transition"
+          className="px-4 py-2 font-medium text-indigo-600 transition bg-white rounded-lg hover:bg-yellow-400 hover:text-white"
         >
           Log In
         </Link>
@@ -35,7 +35,7 @@ function Header() {
 
       {/* Mobile Menu Toggle */}
       {/* <button
-        className="block md:hidden text-white focus:outline-none"
+        className="block text-white md:hidden focus:outline-none"
         onClick={() => setIsMenuOpen(!isMenuOpen)}
       >
         {isMenuOpen ? <LogIn className="w-6 h-6" /> : <User className="w-6 h-6" />}

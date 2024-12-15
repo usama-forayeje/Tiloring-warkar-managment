@@ -67,11 +67,11 @@ function LeftSidebar() {
             Dashboard
           </Link>
           <Link
-            to="/customer"
+            to="/allCustomers"
             className="flex items-center gap-2 mb-4 font-medium text-blue-200 duration-300 hover:text-white"
           >
             <Users className="w-5 h-5" />
-            Customer
+            Customers
           </Link>
           <Link
             to="/inventory"

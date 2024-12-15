@@ -1,17 +1,12 @@
-import { useState, useEffect, useRef } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { Button } from "@/components/ui/button";
 import { getNewWork } from "@/features/newWork/newWorkSlice";
-import {
-  AlertCircle,
-  CheckCircle,
-  ChevronDown,
-  CircleUserRound,
-  Clock,
-  Truck,
-} from "lucide-react";
+import { AlertCircle, CheckCircle, ChevronDown, CircleUserRound, Clock, Edit, Trash, Truck } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router";
 
-function Content() {
+function AllCustomers() {
+
   const [searchTerm, setSearchTerm] = useState("");
   const [isFilterMenuOpen, setIsFilterMenuOpen] = useState(false);
   const filterMenuRef = useRef(null);
@@ -101,93 +96,119 @@ function Content() {
     );
   } else {
     newWorkList = reversedFilteredData?.map((item, index) => (
-      <Link
+      <div
         key={index}
-        to={`/edit-work/${item?.id}`}
         className="block cursor-pointer"
       >
-        <div className="w-full p-6 transition duration-300 ease-in-out transform bg-white border rounded-lg shadow-md hover:shadow-lg">
-          {/* Card Header */}
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="flex items-center text-lg font-semibold text-indigo-600">
-              <span className="mr-2 text-indigo-500">
-                <CircleUserRound />
-              </span>
-              {item.customerName}
-            </h3>
-            <span
-              className={`group flex items-center space-x-2 px-3 py-2 text-sm font-semibold text-white rounded-full shadow-md transition-all duration-300 ${
-                item.delivered
-                  ? "bg-blue-500 hover:shadow-blue-400/50" // Delivered
-                  : item.workerRate > 0
-                  ? "bg-green-500 hover:shadow-green-400/50" // Completed
-                  : item.masterName ||
-                    item.workerName ||
-                    item.workerRate !== undefined
-                  ? "bg-yellow-500 hover:shadow-yellow-400/50" // Pending
-                  : "bg-gray-500 hover:shadow-gray-400/50" // New
-              }`}
-              title={
-                item.delivered
-                  ? "This work has been delivered"
-                  : item.workerRate > 0
-                  ? "This work is completed"
-                  : item.masterName ||
-                    item.workerName ||
-                    item.workerRate !== undefined
-                  ? "This work is pending"
-                  : "This work is new"
-              }
-            >
-              {item.delivered ? (
-                <>
-                  <Truck className="w-5 h-5 transition-transform group-hover:scale-110" />
-                  <span>Delivered</span>
-                </>
-              ) : item.workerRate > 0 ? (
-                <>
-                  <CheckCircle className="w-5 h-5 transition-transform group-hover:scale-110" />
-                  <span>Completed</span>
-                </>
-              ) : item.masterName ||
+          <div className="w-full p-6 transition duration-300 ease-in-out transform bg-white border rounded-lg shadow-md hover:shadow-lg">
+      {/* Card Header */}
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="flex items-center text-lg font-semibold text-indigo-600">
+          <span className="mr-2 text-indigo-500">
+            <CircleUserRound />
+          </span>
+          {item.customerName}
+        </h3>
+        <span
+          className={`group flex items-center space-x-2 px-3 py-2 text-sm font-semibold text-white rounded-full shadow-md transition-all duration-300 ${
+            item.delivered
+              ? "bg-blue-500 hover:shadow-blue-400/50" // Delivered
+              : item.workerRate > 0
+              ? "bg-green-500 hover:shadow-green-400/50" // Completed
+              : item.masterName ||
                 item.workerName ||
-                item.workerRate !== undefined ? (
-                <>
-                  <Clock className="w-5 h-5 transition-transform group-hover:scale-110" />
-                  <span>Pending</span>
-                </>
-              ) : (
-                <>
-                  <AlertCircle className="w-5 h-5 transition-transform group-hover:scale-110" />
-                  <span>New</span>
-                </>
-              )}
-            </span>
-          </div>
+                item.workerRate !== undefined
+              ? "bg-yellow-500 hover:shadow-yellow-400/50" // Pending
+              : "bg-gray-500 hover:shadow-gray-400/50" // New
+          }`}
+          title={
+            item.delivered
+              ? "This work has been delivered"
+              : item.workerRate > 0
+              ? "This work is completed"
+              : item.masterName ||
+                item.workerName ||
+                item.workerRate !== undefined
+              ? "This work is pending"
+              : "This work is new"
+          }
+        >
+          {item.delivered ? (
+            <>
+              <Truck className="w-5 h-5 transition-transform group-hover:scale-110" />
+              <span>Delivered</span>
+            </>
+          ) : item.workerRate > 0 ? (
+            <>
+              <CheckCircle className="w-5 h-5 transition-transform group-hover:scale-110" />
+              <span>Completed</span>
+            </>
+          ) : item.masterName ||
+            item.workerName ||
+            item.workerRate !== undefined ? (
+            <>
+              <Clock className="w-5 h-5 transition-transform group-hover:scale-110" />
+              <span>Pending</span>
+            </>
+          ) : (
+            <>
+              <AlertCircle className="w-5 h-5 transition-transform group-hover:scale-110" />
+              <span>New</span>
+            </>
+          )}
+        </span>
+      </div>
 
-          {/* Card Content */}
-          <div className="flex items-center justify-between">
-            <div className="space-y-2">
-              <p className="text-sm text-gray-600">
-                <span className="font-medium text-gray-800">Quantity:</span>{" "}
-                {item.quantity}
-              </p>
-              <p className="text-sm text-gray-600">
-                <span className="font-medium text-gray-800">Order #:</span>{" "}
-                {item.orderNumber}
-              </p>
-            </div>
-            <div className="flex items-center space-x-4">
-              <p className="text-sm text-gray-600">{item.deliveryDate}</p>
-            </div>
-          </div>
+      {/* Card Content */}
+      <div className="flex items-center justify-between">
+        <div className="space-y-2">
+          <p className="text-sm text-gray-600">
+            <span className="font-medium text-gray-800">Quantity:</span>{" "}
+            {item.quantity}
+          </p>
+          <p className="text-sm text-gray-600">
+            <span className="font-medium text-gray-800">Order #:</span>{" "}
+            {item.orderNumber}
+          </p>
         </div>
-      </Link>
+        <div className="flex items-center space-x-4">
+          <p className="text-sm text-gray-600">{item.deliveryDate}</p>
+        </div>
+      </div>
+
+      {/* Action Buttons */}
+      <div className="flex mt-4 space-x-4">
+        <Link >
+        <Button
+          variant="outline"
+          color="red"
+          // Assuming item.id exists for identification
+          className="flex items-center gap-2"
+        >
+          <Trash className="w-5 h-5" />
+          Delete
+        </Button>
+        </Link>
+        <Link to={`/edit-work/${item.id}`}>
+        <Button
+          variant="outline"
+          color="blue"
+          // Assuming item.id exists for identification
+          className="flex items-center gap-2"
+        >
+          <Edit className="w-5 h-5" />
+          Edit
+        </Button>
+        </Link>
+      </div>
+    </div>
+      </div>
     ));
   }
-
+  
+  
   return (
-    <div className="absolute right-0 z-10 w-full p-4 ">
+    <div className="absolute right-0 z-10 w-full p-4">
       {/* Search Bar */}
       <div className="sticky top-[72px] rounded-md bg-white z-10 mb-6 flex items-center gap-4 shadow-sm py-8 px-4">
         <input
@@ -231,7 +252,7 @@ function Content() {
 
       <div className="mt-20 space-y-6 ">{newWorkList}</div>
     </div>
-  );
+  )
 }
 
-export default Content;
+export default AllCustomers

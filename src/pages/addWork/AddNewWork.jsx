@@ -5,6 +5,7 @@ import { ArrowLeft } from "lucide-react"; // Lucide icon for prev button
 import { useNavigate, useParams } from "react-router";
 import { Button } from "@/components/ui/button";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { v4 as uuidv4 } from 'uuid';
 
 import { getDatabase, push, ref, set } from "firebase/database";
 import app from "@/database/firebaseConfig";
@@ -83,7 +84,7 @@ function AddNewWork() {
         });
     } else {
       // Add new work
-      const uniqueId = crypto.randomUUID(); // Replace with UUID library if needed
+      const uniqueId = uuidv4();
       set(ref(db, `newWorks/${uniqueId}`), { ...data, deliveryDate: formattedDate })
         .then(() => {
           Swal.fire({
