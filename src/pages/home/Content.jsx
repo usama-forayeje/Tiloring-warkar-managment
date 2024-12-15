@@ -187,7 +187,7 @@ function Content() {
   }
 
   return (
-    <div className="absolute right-0 z-10 w-full p-4 ">
+    <div className="absolute right-0 z-10 w-full p-4 -top-12">
       {/* Search Bar */}
       <div className="sticky top-[72px] rounded-md bg-white z-10 mb-6 flex items-center gap-4 shadow-sm py-8 px-4">
         <input

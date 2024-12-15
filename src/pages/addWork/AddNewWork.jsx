@@ -132,7 +132,7 @@ function AddNewWork() {
 
 
   return (
-    <div className="flex items-center justify-center min-h-screen px-4 py-6 sm:px-6 lg:px-8 bg-gradient-to-r from-indigo-600 to-blue-500">
+    <div className="flex items-center justify-center px-4 py-6 sm:px-6 lg:px-8 ">
       <div className="w-full max-w-3xl p-10 text-white shadow-2xl bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl">
         <div className="flex items-center justify-between mb-8">
           {/* Prev Button */}

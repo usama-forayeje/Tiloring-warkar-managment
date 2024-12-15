@@ -180,12 +180,9 @@ function AllCustomers() {
       <div className="flex mt-4 space-x-4">
         <Link >
         <Button
-          variant="outline"
-          color="red"
-          // Assuming item.id exists for identification
-          className="flex items-center gap-2"
+          variant="destructive"
         >
-          <Trash className="w-5 h-5" />
+          <Trash className="-ms-1 me-1 opacity-60" size={16} strokeWidth={2} aria-hidden="true" />
           Delete
         </Button>
         </Link>
@@ -208,7 +205,7 @@ function AllCustomers() {
   
   
   return (
-    <div className="absolute right-0 z-10 w-full p-4">
+    <div className="absolute right-0 z-10 w-full p-4 -top-14">
       {/* Search Bar */}
       <div className="sticky top-[72px] rounded-md bg-white z-10 mb-6 flex items-center gap-4 shadow-sm py-8 px-4">
         <input

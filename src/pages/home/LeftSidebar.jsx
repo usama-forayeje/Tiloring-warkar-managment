@@ -36,7 +36,7 @@ function LeftSidebar() {
 
 
   return (
-    <div className=" fixed left-0 top-[75px]  z-50 h-screen w-5/12 flex">
+    <div className=" fixed left-0 top-[75px]  z-50 h-screen  flex">
       {/* Sidebar Section */}
       <div
         className={`w-64 overflow-auto pb-16 scrollbar-hide  bg-gradient-to-r z-20 bg-indigo-800 text-white px-6 py-4 fixed top-0 left-0 bottom-0 shadow-xl flex flex-col justify-between transition-all duration-500 transform ${
