@@ -4,24 +4,30 @@ import AddNewWork from "./pages/addWork/AddNewWork";
 import Error from "./Error";
 import AllCustomers from "./pages/customers";
 import Content from "./pages/home/Content";
+import SignInForm from "./pages/auth/Signin";
+import RegisterForm from "./pages/auth/Register";
 
 function App() {
   return (
     <Routes>
-    {/* Parent Route with Static Header and Sidebar */}
-    <Route path="/" element={<Main />}>
-      {/* Default Content */}
-      <Route index element={<Content />} />
+      {/* Parent Route with Static Header and Sidebar */}
+      <Route path="/" element={<Main />}>
+        {/* Auth routes */}
+        <Route path="signin" element={<SignInForm />} />
+        <Route path="register" element={<RegisterForm />} />
 
-      {/* Child Routes for Dynamic Content */}
-      <Route path="add-work" element={<AddNewWork />} />
-      <Route path="edit-work/:id" element={<AddNewWork />} />
-      <Route path="allCustomers" element={<AllCustomers />} />
+        {/* Default Content */}
+        <Route index element={<Content />} />
 
-      {/* Catch-All Route */}
-      <Route path="*" element={<Error />} />
-    </Route>
-  </Routes>
+        {/* Child Routes for Dynamic Content */}
+        <Route path="add-work" element={<AddNewWork />} />
+        <Route path="edit-work/:id" element={<AddNewWork />} />
+        <Route path="allCustomers" element={<AllCustomers />} />
+
+        {/* Catch-All Route */}
+        <Route path="*" element={<Error />} />
+      </Route>
+    </Routes>
   );
 }
 

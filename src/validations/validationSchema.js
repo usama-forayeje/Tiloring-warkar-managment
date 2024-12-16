@@ -1,33 +1,60 @@
-import * as yup from "yup";
-
-export const newWorkFormSchema = yup
-  .object({
-    orderNumber: yup
-      .number()
-      .required("Order Number is mandatory and must be a number"),
-    quantity: yup.number().required("Please select a valid quantity"),
-    workerRate: yup
-      .number()
-      .nullable(true) // Worker Rate is not required, allows null or undefined
-      .typeError("Worker Rate must be a number"),
-    workerName: yup.string().nullable(true),
-
-    deliveryDate: yup
-      .date()
-      .required("Delivery Date is mandatory")
-      .typeError("Please provide a valid date"),
-    productName: yup.string().required("Product Name is required"),
-    masterName: yup.string().nullable(true), // Allows null or undefined if optional
-
-    customerName: yup.string().required("Customer Name cannot be empty"),
-    CustomerNumber: yup
-      .number()
-      .typeError("Customer Number must be numeric")
-      .required("Customer Phone Number is required"),
-    delivered: yup.boolean().default(false),
-  })
-  .required();
+import * as Yup from "yup";
 
 
-
+export const newWorkFormSchema = Yup.object({
+  orderNumber: Yup.number()
+    .typeError("Order Number is mandatory and must be a number")
+    .required("Order Number is mandatory and must be a number"), // সঠিক টাইপিং
   
+  quantity: Yup.number() // Field name `quantitY` কে `quantity` করা হয়েছে
+    .typeError("Please select a valid quantity")
+    .required("Please select a valid quantity"),
+  
+  workerRate: Yup.number()
+    .nullable(true), // Optional field
+  
+  workerName: Yup.string()
+    .nullable(true), // Optional field
+  
+  deliveryDate: Yup.date() // Field name `deliverYDate` কে `deliveryDate` করা হয়েছে
+    .typeError("Please provide a valid date")
+    .required("Delivery Date is mandatory"), // সঠিক টাইপিং
+  
+  productName: Yup.string()
+    .required("Product Name is required"),
+  
+  masterName: Yup.string()
+    .nullable(true), // Optional field
+  
+  customerName: Yup.string()
+    .required("Customer Name cannot be empty"), // সঠিক টাইপিং
+  
+  CustomerNumber: Yup.number()
+    .typeError("Customer Number must be numeric")
+    .required("Customer Phone Number is required"), // সঠিক টাইপিং
+  
+  delivered: Yup.boolean().default(false), // Default value for `delivered`
+}).required();
+
+
+
+export const registerFormSchema = Yup.object({
+  firstName: Yup.string().required("First Name is mandatory."),
+  lastName: Yup.string().required("Last Name is mandatory."),
+  email: Yup.string()
+    .email("Please enter a valid email address.")
+    .required("Email is mandatory."),
+  password: Yup.string().required("Password is mandatory."),  // Add string() here
+}).required();
+
+
+
+
+export const signInFormSchema = Yup.object({
+  email: Yup.string()
+    .email("Please enter a valid email address.")
+    .required("Email is mandatory."),
+  password: Yup.string()
+    .min(6, "Password must be at least 6 characters long.")
+    .required("Password is mandatory."),
+}).required();
