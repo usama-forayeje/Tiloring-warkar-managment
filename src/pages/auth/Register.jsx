@@ -21,9 +21,21 @@ const RegisterForm = () => {
   });
 
   const onSubmit = async (data) => {
-    const resp = registerUser(data)
-    console.log(data); // Replace with your API integration
-    reset(); // Reset form values
+    const formData = {
+      firstName: data.firstName,
+      lastName: data.lastName,
+      email: data.email,
+      password: data.password,
+      role: 'user'
+      
+    }
+    const resp = await registerUser(data)
+    if(resp.error){
+      console.log('error hoyeche');
+      
+    }
+    console.log(resp); // Replace with your API integration
+    // reset(); // Reset form values
   };
 
   return (
