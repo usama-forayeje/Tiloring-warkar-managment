@@ -6,12 +6,15 @@ import AllCustomers from "./pages/customers";
 import Content from "./pages/home/Content";
 import SignInForm from "./pages/auth/Signin";
 import RegisterForm from "./pages/auth/Register";
+import { Toaster } from "./components/ui/toaster";
 
 function App() {
   return (
-    <Routes>
+    <>
+     <Routes>
       {/* Parent Route with Static Header and Sidebar */}
       <Route path="/" element={<Main />}>
+      
         {/* Auth routes */}
         <Route path="signin" element={<SignInForm />} />
         <Route path="register" element={<RegisterForm />} />
@@ -26,8 +29,12 @@ function App() {
 
         {/* Catch-All Route */}
         <Route path="*" element={<Error />} />
+        
       </Route>
     </Routes>
+    <Toaster />
+    </>
+   
   );
 }
 

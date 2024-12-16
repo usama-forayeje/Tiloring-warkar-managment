@@ -8,6 +8,8 @@ import { useForm } from "react-hook-form";
 import InputPasswordWithHookForm from "@/components/ui/passwordInput";
 import { Mail } from "lucide-react";
 import { registerUser } from "@/database/firebseAuth";
+import { toast } from "sonner";
+import Swal from "sweetalert2";
 
 const RegisterForm = () => {
   const {
@@ -20,23 +22,54 @@ const RegisterForm = () => {
     resolver: yupResolver(registerFormSchema),
   });
 
+
   const onSubmit = async (data) => {
     const formData = {
       firstName: data.firstName,
       lastName: data.lastName,
       email: data.email,
       password: data.password,
-      role: 'user'
-      
+      role: "user",
+    };
+  
+    try {
+      const resp = await registerUser(formData);
+  
+      // Error Handling
+      if (resp.error) {
+        Swal.fire({
+          icon: "error",
+          title: `Error: ${resp.code}`,
+          text: resp.message || "Something went wrong. Please try again!",
+          timer: 4000,
+          timerProgressBar: true,
+        });
+        console.log(resp);
+        return;
+      }
+  
+      // Success Message
+      Swal.fire({
+        icon: "success",
+        title: "Account created successfully!",
+        text: "Welcome! Redirecting you shortly.",
+        timer: 3000,
+        timerProgressBar: true,
+      });
+  
+      console.log(resp); // Replace with your API integration
+    } catch (error) {
+      // Unexpected Errors
+      Swal.fire({
+        icon: "error",
+        title: "Unexpected Error!",
+        text: error.message || "Please try again later.",
+        timer: 4000,
+        timerProgressBar: true,
+      });
     }
-    const resp = await registerUser(data)
-    if(resp.error){
-      console.log('error hoyeche');
-      
-    }
-    console.log(resp); // Replace with your API integration
-    // reset(); // Reset form values
   };
+
 
   return (
     <div className="flex items-center justify-center h-screen bg-gray-50">

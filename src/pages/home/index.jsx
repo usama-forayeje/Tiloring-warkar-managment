@@ -17,8 +17,10 @@ function Main() {
 
       {/* Dynamic Content */}
       <div className="absolute right-0 z-10 block w-full p-4 top-[55px] lg:w-9/12 md:w-9/12 ">
+     
         <Outlet />
       </div>
+      
     </div>
   );
 }
