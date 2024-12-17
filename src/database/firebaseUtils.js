@@ -52,3 +52,26 @@ export const removeFirebaseData = async (tableName) => {
     console.error("Error while deleting data:", error);
   }
 };
+
+
+// **************** user profile ****************
+
+export const createUserProfile = async (data ) => {
+  const {id, firstName,lastName,password, role,} = data 
+  set(ref(db, "userProfile/" + id), {
+    firstName ,lastName ,role,password,
+  });
+} 
+
+
+export const getUserProfile = async (id) => {
+  return new Promise((resolve, reject) => {
+    try {
+        onValue(ref(db, "userProfile/" + id), (snapshot) => {
+            resolve(snapshot.val());
+        });
+    } catch (error) {
+        reject(error);
+    }
+});
+}

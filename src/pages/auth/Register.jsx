@@ -1,17 +1,18 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { registerFormSchema } from "@/validations/validationSchema";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import InputPasswordWithHookForm from "@/components/ui/passwordInput";
 import { Mail } from "lucide-react";
 import { registerUser } from "@/database/firebseAuth";
-import { toast } from "sonner";
 import Swal from "sweetalert2";
+import { createUserProfile } from "@/database/firebaseUtils";
 
 const RegisterForm = () => {
+  const navigate = useNavigate()
   const {
     register,
     handleSubmit,
@@ -44,7 +45,6 @@ const RegisterForm = () => {
           timer: 4000,
           timerProgressBar: true,
         });
-        console.log(resp);
         return;
       }
   
@@ -57,7 +57,10 @@ const RegisterForm = () => {
         timerProgressBar: true,
       });
   
-      console.log(resp); // Replace with your API integration
+      // Replace with your API integration
+      createUserProfile(resp)
+      reset()
+      navigate('/signin')
     } catch (error) {
       // Unexpected Errors
       Swal.fire({

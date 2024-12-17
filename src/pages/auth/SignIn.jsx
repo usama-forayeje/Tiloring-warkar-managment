@@ -4,11 +4,16 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
-import { Mail, Lock, Eye, EyeOff } from "lucide-react";
-import { Link } from "react-router-dom"; // Correct import
+import { Mail, Eye, EyeOff } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom"; // Correct import
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { signInFormSchema } from "@/validations/validationSchema";
+import { loginUser } from "@/database/firebseAuth";
+import Swal from "sweetalert2";
+import { useDispatch } from "react-redux";
+import { getUserProfile } from "@/database/firebaseUtils";
+import { logInUserRedux } from "../../features/auth/authSlice";
 
 // Google SVG Icon
 const GoogleIcon = () => (
@@ -38,7 +43,8 @@ const GoogleIcon = () => (
 
 const SignInForm = () => {
   const [showPassword, setShowPassword] = useState(false);
-
+  const navigate = useNavigate();
+  const dispatch = useDispatch()
   const {
     register,
     handleSubmit,
@@ -48,9 +54,59 @@ const SignInForm = () => {
     resolver: yupResolver(signInFormSchema),
   });
 
-  const onSubmit = (data) => {
-    console.log("Sign-in data: ", data);
-    reset()
+  const onSubmit = async (data) => {
+    try {
+      const resp = await loginUser({
+        email: data.email,
+        password: data.password,
+      });
+
+      if (resp.error) {
+        Swal.fire({
+          icon: "error",
+          title: `Error: ${resp.code}`,
+          text: resp.message || "Something went wrong. Please try again!",
+          timer: 3000,
+          timerProgressBar: true,
+        });
+        return;
+      }
+
+      Swal.fire({
+        icon: "success",
+        title: "Login successful!",
+        text: "Welcome back!",
+        timer: 3000,
+        timerProgressBar: true,
+      });
+      
+      let userProfile = await getUserProfile(resp.id)
+      console.log(userProfile);
+      
+      let userInfo = {
+        id: resp.id,
+        email: resp.email,
+        role: userProfile.role,
+        firstName: userProfile.firstName,
+        lastName: userProfile.lastName
+        
+      }
+      console.log(userInfo);
+      
+      dispatch(logInUserRedux(userInfo));
+      
+      // reset();
+      // Redirect to dashboard or home page
+      navigate("/p");
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Unexpected Error!",
+        text: error.message || "Please try again later.",
+        timer: 4000,
+        timerProgressBar: true,
+      });
+    }
   };
 
   return (

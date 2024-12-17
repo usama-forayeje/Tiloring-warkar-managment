@@ -1,8 +1,9 @@
+import Header from "@/components/Header";
+import LeftSidebar from "@/components/LeftSidebar";
 import { Outlet } from "react-router-dom";
-import Header from "./Header";
-import LeftSidebar from "./LeftSidebar";
 
 function Main() {
+  
   return (
     <div>
       {/* Static Header */}

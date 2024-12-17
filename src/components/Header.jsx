@@ -1,8 +1,10 @@
-import { Link } from "react-router-dom";
-import { User } from "lucide-react";
+
 import LoginIcon from "@/components/ui/loginIcon";
+import { useSelector } from "react-redux";
 
 function Header() {
+  const authUser = useSelector((state) => state.auth);
+  console.log(authUser.user);
   return (
     <header className="flex items-center justify-between p-4 text-white shadow-md bg-gradient-to-r from-indigo-600 to-blue-500">
       {/* Left Side: Logo */}
@@ -12,7 +14,10 @@ function Header() {
           alt="Shop Logo"
           className="w-10 h-10 rounded-full"
         />
-        <span className="text-xl font-semibold">ShopName</span>
+       <span className="text-xl font-semibold">
+  {`${authUser.user.firstName} ${authUser.user.lastName}`}
+</span>
+
       </div>
 
       {/* Middle: Shop Name */}
