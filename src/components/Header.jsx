@@ -24,7 +24,7 @@ function Header() {
       </div>
 
       {/* Right Side: Profile and Login */}
-      <div className="font-medium text-indigo-600 transition bg-white rounded-lg hover:bg-yellow-400 hover:text-white">
+      <div className="font-medium text-indigo-600 transition bg-white rounded-full hover:bg-yellow-400 hover:text-white">
         <LoginIcon  />
       </div>
     </header>
