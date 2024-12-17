@@ -1,4 +1,3 @@
-
 import LoginIcon from "@/components/ui/loginIcon";
 import { useSelector } from "react-redux";
 
@@ -14,10 +13,9 @@ function Header() {
           alt="Shop Logo"
           className="w-10 h-10 rounded-full"
         />
-       <span className="text-xl font-semibold">
-  {`${authUser.user.firstName} ${authUser.user.lastName}`}
-</span>
-
+        <span className="text-xl font-semibold">
+          {`${authUser?.user?.firstName} ${authUser?.user?.lastName}`}
+        </span>
       </div>
 
       {/* Middle: Shop Name */}
@@ -26,16 +24,11 @@ function Header() {
       </div>
 
       {/* Right Side: Profile and Login */}
-        <div
-          className="font-medium text-indigo-600 transition bg-white rounded-lg hover:bg-yellow-400 hover:text-white"
-        >
-          <LoginIcon/>
-        </div>
-
-    
+      <div className="font-medium text-indigo-600 transition bg-white rounded-lg hover:bg-yellow-400 hover:text-white">
+        <LoginIcon  />
+      </div>
     </header>
   );
 }
 
 export default Header;
-
